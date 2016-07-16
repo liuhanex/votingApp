@@ -1,0 +1,146 @@
+<div class="page-header">
+	<h1>查看投票主题</h1>
+</div>
+
+<div class="well well-lg">
+	<strong>问题内容</strong><br />{{poll.question}}
+</div>
+
+<div ng-hide="poll.userVoted">
+	<p class="lead">请选择下列选项之一：</p>
+
+	<form role="form" ng-submit="vote()">
+		<div ng-repeat="choice in poll.choices" class="radio">
+			<label>
+				<input type="radio" name="choice" ng-model="poll.userVote" value="{{choice._id}}">
+				{{choice.text}}
+			</label>
+		</div>
+<!-- 2016/06/04 ADD START -->
+		<div class="row" ng-show="poll.hasOption">
+			<div class="col-md-2" ng-repeat="option in poll.options">
+				<label>{{option.text}}</label>
+				<select class="form-control" ng-model="selectedValues[option.text]">
+					<option value="" selected>-请选择-</option>
+					<option ng-repeat="choice in option.choices" value="{{choice._id}}">
+						{{choice.text}}
+					</option>
+				</select>
+			</div>
+		</div>
+<!-- 2016/06/04 ADD END   -->
+		<p style="margin-top: 20px"><hr /></p>
+		<div class="row">
+			<div class="col-xs-6">
+				<a href="#/polls" class="btn btn-default" role="button">
+					<span class="glyphicon glyphicon-arrow-left"></span>
+					返回
+				</a>
+			</div>
+			<div class="col-xs-6">
+				<button class="btn btn-primary pull-right" type="submit">投票 &raquo;</button>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div ng-show="poll.userVoted">
+	<div ng-show="poll.originalView">
+		<table class="result-table">
+			<tr ng-repeat="choice in poll.choices">
+				<td>{{choice.text}}</td>
+				<td>
+					<table style="width: 100%">
+						<tr>
+							<td class="bar" style="width: {{choice.votes.length/poll.totalVotes*100}}%">
+								{{choice.votes.length}}
+							</td>						
+							<td class="percentage"
+										style="width: {{100-choice.votes.length/poll.totalVotes*100}}%">
+								({{choice.votes.length / poll.totalVotes * 100 | number: 2}}%)
+							</td>
+						</tr>
+					</table>
+				</td>	
+			</tr>
+		</table>
+
+		<p>
+			<em>
+				目前有 {{poll.totalVotes}} 人参与过此投票<br />
+				<span ng-show="poll.userChoice">您的选择是: {{poll.userChoice.text}}</span>
+			</em>
+		</p>
+	</div>
+
+<!-- 2016/06/04 ADD START -->
+	<div ng-show="poll.optionalView">
+		<table class="result-table">
+			<tr ng-repeat="choice in option.choices">
+				<td>{{choice.text}}</td>
+				<td>
+					<table style="width: 100%">
+						<tr>
+							<td class="bar" style="width: {{choice.votes.length/poll.totalVotes*100}}%">
+								{{choice.votes.length}}
+							</td>						
+							<td class="percentage"
+										style="width: {{100-choice.votes.length/poll.totalVotes*100}}%">
+								({{choice.votes.length / poll.totalVotes * 100 | number: 2}}%)
+							</td>
+						</tr>
+					</table>
+				</td>	
+			</tr>
+		</table>
+
+		<p>
+			<em>
+				目前有 {{poll.totalVotes}} 人参与过此投票<br />
+				<span ng-show="poll.userChoice">您的选择是: {{poll.userChoice.text}}</span>
+			</em>
+		</p>
+	</div>
+
+	<div ng-show="poll.hasOption" style="margin-top: 20px">
+		<div class="btn-group">
+			<button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"
+				aria-haspopup="true" aria-expanded="false">
+				统计区分 <span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a ng-click="filter('null')">按选项</a></li>
+				<li ng-repeat="option in poll.options">
+					<a ng-click="filter(option._id)">按{{option.text}}</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<!-- <div ng-show="poll.hasOption" ng-repeat="option in poll.options" class="btn-group" role="group">
+		<button class="btn btn-default" type="button">{{option.text}}</button>
+	</div> -->
+<!-- 2016/06/04 ADD END   -->
+
+	<p><hr /></p>
+
+	<div class="row">
+		<div class="col-xs-6">
+			<a href="#/polls" class="btn btn-default" role="button">
+				<span class="glyphicon glyphicon-arrow-left"></span>
+				返回
+			</a>
+		</div>
+		<div class="col-xs-6">
+			<!-- <a href="#/polls/{{poll._id}}/download" class="btn btn-primary pull-right">
+				<span class="glyphicon glyphicon-download-alt"></span>
+				数据导出
+			</a> -->
+			<a class="btn btn-primary pull-right" ng-click="generateFile()">
+				<span class="glyphicon glyphicon-download-alt"></span>
+				数据导出
+			</a>
+		</div>
+	</div>
+</div>
+
+<p>&nbsp;</p>
