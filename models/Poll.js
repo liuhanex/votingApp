@@ -9,13 +9,11 @@ var choiceSchema = new mongoose.Schema({
 	votes: [voteSchema]
 });
 
-// 2016/06/04 ADD START *****
 // Sub document schema for options
 var optionSchema = new mongoose.Schema({
 	text: String,
 	choices: [choiceSchema]
 });
-// 2016/06/04 ADD END   *****
 
 // Document schema for polls
 exports.PollSchema = new mongoose.Schema({
@@ -24,9 +22,6 @@ exports.PollSchema = new mongoose.Schema({
 		required: true
 	},
 	choices: [choiceSchema],
-
-// 2016/06/04 ADD START *****
-    options: [optionSchema],
-    category: String
-// 2016/06/04 ADD END   *****
+  options: [optionSchema],
+  category: String
 });

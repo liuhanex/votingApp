@@ -1,28 +1,19 @@
+// Require file system module for data exporting
+var fs = require('fs');
 // Connect to MongoDB using mongoose
 var mongoose = require('mongoose');
 var db;
 
 if (process.env.VCAP_SERVICES) {
-
 	var env = JSON.parse(process.env.VCAP_SERVICES);
 	db = mongoose.createConnection(env['mongodb-2.2'][0].credentials.url);
-
 } else {
-
 	db = mongoose.createConnection('localhost', 'pollsapp');
 }
 
 // Get poll schema and model
 var PollSchema = require('../models/Poll.js').PollSchema;
 var Poll = db.model('polls', PollSchema);
-
-// Require file system module for data exporting
-var fs = require('fs');
-
-/* GET home page. */
-// router.get('/', function(req, res, next) {
-//   res.render('index', { title: 'Express' });
-// });
 
 // Main app view
 exports.index = function(req, res, next) {
@@ -33,7 +24,6 @@ exports.index = function(req, res, next) {
 exports.list = function(req, res, next) {
 	// Query MongoDB for polls, just get back the question text
 	Poll.find({}, {'category': 1, 'question': 1}, function(error, polls) {
-
 		res.json(polls);
 	});
 };
@@ -247,17 +237,8 @@ exports.download = function(req, res, next) {
 
 				}			
 			});
-			
-			// res.download(file, function(err) {
-			// 	if (!err)
-			// 		console.log('File Sent: ' + timestamp + '.xls');
-			// 	else {				
-			// 		res.json({error: true});
-			// 	}
-			// });
 
 		} else {
-
 			res.json({error: true});
 		}
 	});
@@ -333,5 +314,3 @@ exports.vote = function(socket) {
 		});
 	});
 };
-
-//module.exports = router;
